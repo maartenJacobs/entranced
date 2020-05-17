@@ -6,7 +6,7 @@ defmodule Entranced.Application do
   use Application
 
   def start(_type, _args) do
-    port = String.to_integer(System.get_env("PORT", "2222"))
+    port = Application.fetch_env!(:entranced, :port)
 
     children = [
       {Entranced.Counter, name: Entranced.Counter},

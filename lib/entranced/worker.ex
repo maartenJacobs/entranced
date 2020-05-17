@@ -6,9 +6,6 @@ defmodule Entranced.Worker do
   of data to the socket every 10 seconds.
   """
 
-  # 10 seconds
-  @delay 10_000
-
   ## Client API
 
   def start_link(socket) do
@@ -56,7 +53,7 @@ defmodule Entranced.Worker do
   end
 
   defp delay_serve() do
-    Process.send_after(self(), :serve, @delay)
+    Process.send_after(self(), :serve, Application.fetch_env!(:entranced, :write_delay_ms))
   end
 
   defp random_line() do

@@ -45,7 +45,7 @@ defmodule Entranced.ApplicationTest do
         :timer.sleep(delay * 3)
       end)
 
-    assert output =~ "New client connected! Now serving 1 clients."
-    assert output =~ "Client disconnected! Now serving 0 clients."
+    assert output =~ "New client connected (127.0.0.1)! Now serving 1 clients."
+    assert output =~ "Client disconnected (127.0.0.1)! Now serving 0 clients."
   end
 end

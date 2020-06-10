@@ -3,7 +3,7 @@ defmodule Entranced.Server do
 
   @spec accept(:inet.port_number()) :: no_return
   def accept(port) do
-    {:ok, lsocket} =
+    {:ok, listen_sock} =
       :gen_tcp.listen(port, [
         :binary,
         # No packaging is done as we'll be throwing away the request anyway.
@@ -15,13 +15,13 @@ defmodule Entranced.Server do
       ])
 
     Logger.info("Accepting connections on #{port}")
-    loop_acceptor(lsocket)
+    loop_acceptor(listen_sock)
   end
 
-  defp loop_acceptor(lsocket) do
-    {:ok, client} = :gen_tcp.accept(lsocket)
+  defp loop_acceptor(listen_sock) do
+    {:ok, client} = :gen_tcp.accept(listen_sock)
     {:ok, pid} = Entranced.WorkerSupervisor.add_worker(client)
     :ok = :gen_tcp.controlling_process(client, pid)
-    loop_acceptor(lsocket)
+    loop_acceptor(listen_sock)
   end
 end

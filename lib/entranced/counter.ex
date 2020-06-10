@@ -6,21 +6,23 @@ defmodule Entranced.Counter do
     Agent.start_link(fn -> 0 end, opts)
   end
 
-  def opened(counter) do
-    Agent.update(counter, &record_opened/1)
+  @spec opened(atom | pid | {atom, any} | {:via, atom, any}, String.t()) :: :ok
+  def opened(counter, client_name) do
+    Agent.update(counter, &record_opened(&1, client_name))
   end
 
-  defp record_opened(count) do
-    Logger.info("New client connected! Now serving #{count + 1} clients.")
+  defp record_opened(count, client_name) do
+    Logger.info("New client connected (#{client_name})! Now serving #{count + 1} clients.")
     count + 1
   end
 
-  def closed(counter) do
-    Agent.update(counter, &record_closed/1)
+  @spec closed(atom | pid | {atom, any} | {:via, atom, any}, String.t()) :: :ok
+  def closed(counter, client_name) do
+    Agent.update(counter, &record_closed(&1, client_name))
   end
 
-  defp record_closed(count) do
-    Logger.info("Client disconnected! Now serving #{count - 1} clients.")
+  defp record_closed(count, client_name) do
+    Logger.info("Client disconnected (#{client_name})! Now serving #{count - 1} clients.")
     count - 1
   end
 end
